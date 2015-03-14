@@ -1,0 +1,23 @@
+gobin:
+    build: .
+    links:
+        - redis
+        - rabbit
+    ports:
+        - "9001"
+#    command: bin/consumer-start-local.sh
+
+redis:
+    image: redis:2.8.19
+
+rabbitdata:
+    image: busybox
+    volumes:
+        - /data/mnesia
+
+rabbit:
+    image: dockerfile/rabbitmq
+    volumes_from:
+        - rabbitdata
+    ports:
+        - "15672:15672"
