@@ -9,3 +9,5 @@ aws s3 cp "gobin_$GIT_VERSION.zip" s3://prima-deploy/gobin/"gobin_$GIT_VERSION.z
 aws elasticbeanstalk create-application-version --application-name prima-go --version-label prima-go-$GIT_VERSION --description "Deploy master" --source-bundle S3Bucket=prima-deploy,S3Key="gobin/gobin_$GIT_VERSION.zip" --no-auto-create-application
 aws elasticbeanstalk update-environment --environment-name prima-go-prod --version-label prima-go-$GIT_VERSION
 rm "gobin_$GIT_VERSION.zip"
+rm parameters_prod.yml
+rm supervisord.conf
