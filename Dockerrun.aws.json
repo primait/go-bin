@@ -1,0 +1,13 @@
+{
+  "AWSEBDockerrunVersion": "1",
+  "Image": {
+    "Name": "golang:1.4.2",
+    "Update": "true"
+  },
+  "Ports": [
+    {
+      "ContainerPort": "9001"
+    }
+  ],
+  "Logging": "/var/log/prima"
+}

@@ -5,8 +5,10 @@ RUN apt-get install -y curl supervisor build-essential &&  rm -r /var/lib/apt/li
 
 ADD . /go/src/github.com/primait/go-bin
 
+RUN cd /go/src/github.com/primait/go-bin && make
+
 WORKDIR /go/src/github.com/primait/go-bin
 
 EXPOSE 9001
 
-CMD ["bin/start.sh"]
+CMD ["bin/start-local.sh"]

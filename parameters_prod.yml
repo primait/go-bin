@@ -1,3 +1,4 @@
+# This file is auto-generated during the composer install
 parameters:
-    rabbitmq_url: "amqp://guest:guest@rabbit/"
-    redis_ip_address: "redis:6379"
+    rabbitmq_url: "amqp://prima:prima@queue-1.prima.prod/prima"
+    redis_ip_address: "cache-1.prima.prod:6379"

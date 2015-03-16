@@ -1,11 +1,10 @@
 gobin:
-    build: .
+    build: docker/
     links:
         - redis
         - rabbit
     ports:
         - "9001:9001"
-    command: bin/start-local.sh
 
 redis:
     image: redis:2.8.19
