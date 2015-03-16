@@ -14,6 +14,7 @@ import (
 
 var (
 	flConfig = flag.String([]string{"c", "-config"}, "", "Config file path")
+	flDev    = flag.Bool([]string{"d", "-dev"}, false, "Dev enviroment")
 )
 
 func init() {
@@ -36,17 +37,19 @@ func main() {
 
 	var config = config.GetConfiguration(*flConfig)
 
-	log.SetFormatter(&log.JSONFormatter{})
 	log.SetOutput(os.Stderr)
 	log.SetLevel(log.InfoLevel)
 
-	log.AddHook(&slackrus.SlackrusHook{
-		AcceptedLevels: slackrus.LevelThreshold(log.InfoLevel),
-		HookURL:        "https://hooks.slack.com/services/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",
-		IconEmoji:      ":dragon_face:",
-		Channel:        "#dev",
-		Username:       "dlx",
-	})
+	if *flDev == false {
+		log.SetFormatter(&log.JSONFormatter{})
+		log.AddHook(&slackrus.SlackrusHook{
+			AcceptedLevels: slackrus.LevelThreshold(log.InfoLevel),
+			HookURL:        "https://hooks.slack.com/services/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",
+			IconEmoji:      ":dragon_face:",
+			Channel:        "#dev",
+			Username:       "dlx",
+		})
+	}
 
 	log.Info("Starting dlx")
 
