@@ -118,8 +118,7 @@ func main() {
 			if err != nil {
 				log.Println("Something went wrong setting data in Redis..fuck..")
 			}
-			log.Printf(body)
-			log.Printf(d.RoutingKey)
+			log.Info(fmt.Sprintf("Received dead message: RoutingKey: %s, Body:%s", d.RoutingKey, body))
 		}
 	}()
 
