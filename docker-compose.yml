@@ -5,6 +5,8 @@ gobin:
         - rabbit
     ports:
         - "9001:9001"
+    volumes:
+        - .:/code
 
 redis:
     image: redis:2.8.19
