@@ -6,7 +6,7 @@ gobin:
     ports:
         - "9001:9001"
     volumes:
-        - .:/code
+        - .:/go/go-bin
 
 redis:
     image: redis:2.8.19
