@@ -1,4 +1,4 @@
 #!/bin/sh
 
-make
+make -s
 supervisord -n -c supervisord-local.conf
