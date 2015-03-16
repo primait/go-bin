@@ -118,7 +118,6 @@ func main() {
 			if err != nil {
 				log.Println("Something went wrong setting data in Redis..fuck..")
 			}
-
 			log.Printf(body)
 			log.Printf(d.RoutingKey)
 		}
