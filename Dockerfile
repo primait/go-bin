@@ -1,13 +1,16 @@
 FROM golang:1.4.2
 
 RUN apt-get update
-RUN apt-get install -y python-pip
-RUN pip install supervisor --pre
+RUN apt-get install -y curl supervisor build-essential &&  rm -r /var/lib/apt/lists/*
 
 ADD . /go/src/github.com/primait/go-bin
 
 RUN cd /go/src/github.com/primait/go-bin && make
 
-EXPOSE 9001 9001
+WORKDIR /go/src/github.com/primait/go-bin
 
-CMD ["supervisord", "-n", "-c", "src/github.com/primait/go-bin/supervisord.conf"]
+EXPOSE 9001
+
+# copy parameters_dev
+
+CMD ["bin/start.sh"]
