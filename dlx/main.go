@@ -7,6 +7,7 @@ import (
 	log "github.com/Sirupsen/logrus"
 	flag "github.com/docker/docker/pkg/mflag"
 	"github.com/garyburd/redigo/redis"
+	"github.com/johntdyer/slackrus"
 	"github.com/primait/go-bin/pkg/config"
 	"github.com/streadway/amqp"
 )
@@ -34,6 +35,20 @@ func main() {
 	}
 
 	var config = config.GetConfiguration(*flConfig)
+
+	log.SetFormatter(&log.JSONFormatter{})
+	log.SetOutput(os.Stderr)
+	log.SetLevel(log.InfoLevel)
+
+	log.AddHook(&slackrus.SlackrusHook{
+		AcceptedLevels: slackrus.LevelThreshold(log.InfoLevel),
+		HookURL:        "https://hooks.slack.com/services/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",
+		IconEmoji:      ":dragon_face:",
+		Channel:        "#dev",
+		Username:       "dlx",
+	})
+
+	log.Info("Starting dlx")
 
 	redisConnection, err := redis.Dial("tcp", config.Parameters["redis_ip_address"])
 	panicOnError(err)
