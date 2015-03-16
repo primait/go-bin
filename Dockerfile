@@ -1,7 +1,7 @@
 FROM golang:1.4.2
 
 RUN apt-get update
-RUN apt-get install -y curl supervisor build-essential &&  rm -r /var/lib/apt/lists/*
+RUN apt-get install -y supervisor &&  rm -r /var/lib/apt/lists/*
 
 ADD . /go/src/github.com/primait/go-bin
 
