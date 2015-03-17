@@ -1,12 +1,11 @@
 package main
 
 import (
-	//"flag"
+	"flag"
 	"fmt"
 	"os"
 
 	log "github.com/Sirupsen/logrus"
-	flag "github.com/docker/docker/pkg/mflag"
 	"github.com/garyburd/redigo/redis"
 	"github.com/johntdyer/slackrus"
 	"github.com/primait/go-bin/pkg/config"
@@ -14,8 +13,8 @@ import (
 )
 
 var (
-	flConfig = flag.String([]string{"c", "-config"}, "", "Config file path")
-	flDev    = flag.Bool([]string{"d", "-dev"}, false, "Dev enviroment")
+	flConfig = flag.String("c", "", "Config file path")
+	flDev    = flag.Bool("d", false, "Dev enviroment")
 )
 
 func init() {
