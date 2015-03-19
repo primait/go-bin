@@ -35,7 +35,8 @@ func main() {
 		os.Exit(1)
 	}
 
-	var config = config.GetConfiguration(*flConfig)
+	configuration, err := config.GetConfiguration(*flConfig)
+	panicOnError(err)
 
 	log.SetOutput(os.Stderr)
 	log.SetLevel(log.InfoLevel)
@@ -53,7 +54,7 @@ func main() {
 
 	log.Info("Starting dlx")
 
-	rabbitConnection, err := amqp.Dial(config.Parameters["rabbitmq_url"])
+	rabbitConnection, err := amqp.Dial(configuration.Parameters["rabbitmq_url"])
 	panicOnError(err)
 	defer rabbitConnection.Close()
 
@@ -105,7 +106,7 @@ func main() {
 	forever := make(chan bool)
 
 	go func() {
-		redisConnection, err := redis.Dial("tcp", config.Parameters["redis_ip_address"])
+		redisConnection, err := redis.Dial("tcp", configuration.Parameters["redis_ip_address"])
 		panicOnError(err)
 		defer redisConnection.Close()
 
