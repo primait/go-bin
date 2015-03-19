@@ -53,10 +53,6 @@ func main() {
 
 	log.Info("Starting dlx")
 
-	redisConnection, err := redis.Dial("tcp", config.Parameters["redis_ip_address"])
-	panicOnError(err)
-	defer redisConnection.Close()
-
 	rabbitConnection, err := amqp.Dial(config.Parameters["rabbitmq_url"])
 	panicOnError(err)
 	defer rabbitConnection.Close()
@@ -109,6 +105,10 @@ func main() {
 	forever := make(chan bool)
 
 	go func() {
+		redisConnection, err := redis.Dial("tcp", config.Parameters["redis_ip_address"])
+		panicOnError(err)
+		defer redisConnection.Close()
+
 		for d := range msgs {
 			body := string(d.Body[:])
 			redisConnection.Send(
