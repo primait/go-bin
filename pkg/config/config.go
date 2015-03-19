@@ -10,7 +10,10 @@ import (
 
 type ConfigError struct {
 	Reason string
-	Error  error
+}
+
+func (ce *ConfigError) Error() string {
+	return fmt.Sprintf("Configuration error: %s", ce.Reason)
 }
 
 type configMap struct {
@@ -40,7 +43,7 @@ func unmarshalConfig(path string) (configuration configMap) {
 	err := yaml.Unmarshal(configFile, &configuration)
 
 	if err != nil {
-		panic(&ConfigError{"Cannot parse yaml configuration", err})
+		panic(&ConfigError{"Cannot parse yaml configuration"})
 	}
 
 	return
@@ -51,7 +54,7 @@ func readConfiguration(path string) (configFile []byte) {
 	configFile, err = ioutil.ReadFile(absConfig)
 
 	if err != nil {
-		panic(&ConfigError{"Cannot read config file", err})
+		panic(&ConfigError{"Cannot read config file"})
 	}
 
 	return
