@@ -1,20 +1,11 @@
 package config
 
 import (
-	"fmt"
 	"io/ioutil"
 	"path/filepath"
 
 	"gopkg.in/yaml.v2"
 )
-
-type ConfigError struct {
-	Reason string
-}
-
-func (ce *ConfigError) Error() string {
-	return fmt.Sprintf("Configuration error: %s", ce.Reason)
-}
 
 type configMap struct {
 	Parameters map[string]string
@@ -22,13 +13,7 @@ type configMap struct {
 
 func GetConfiguration(config string) (configuration configMap, err error) {
 	defer func() {
-		if r := recover(); r != nil {
-			var ok bool
-			err, ok = r.(error)
-			if !ok {
-				err = fmt.Errorf("pkg: %v", r)
-			}
-		}
+		err, _ = recover().(error)
 	}()
 	// http://blog.golang.org/defer-panic-and-recover
 	// https://code.google.com/p/go-wiki/wiki/PanicAndRecover
@@ -43,7 +28,7 @@ func unmarshalConfig(path string) (configuration configMap) {
 	err := yaml.Unmarshal(configFile, &configuration)
 
 	if err != nil {
-		panic(&ConfigError{"Cannot parse yaml configuration"})
+		panic(err)
 	}
 
 	return
@@ -54,7 +39,7 @@ func readConfiguration(path string) (configFile []byte) {
 	configFile, err = ioutil.ReadFile(absConfig)
 
 	if err != nil {
-		panic(&ConfigError{"Cannot read config file"})
+		panic(err)
 	}
 
 	return
