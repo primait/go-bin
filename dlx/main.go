@@ -24,11 +24,10 @@ func init() {
 		flag.PrintDefaults()
 		fmt.Fprint(os.Stdout, "\n")
 	}
+	flag.Parse()
 }
 
 func main() {
-	flag.Parse()
-
 	if *flConfig == "" {
 		flag.Usage()
 		log.Fatal("Please provide a configuration file")
