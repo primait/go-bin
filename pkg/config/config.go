@@ -34,7 +34,10 @@ func unmarshalConfig(path string) (configuration ConfigMap) {
 }
 
 func readConfiguration(path string) (configFile []byte) {
-	absConfig, err := filepath.Abs(path)
+	var err error
+	var absConfig string
+
+	absConfig, err = filepath.Abs(path)
 	if err != nil {
 		panic(err)
 	}
