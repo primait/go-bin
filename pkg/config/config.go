@@ -26,7 +26,6 @@ func GetConfiguration(config string) (configuration ConfigMap, err error) {
 func unmarshalConfig(path string) (configuration ConfigMap) {
 	configFile := readConfiguration(path)
 	err := yaml.Unmarshal(configFile, &configuration)
-
 	if err != nil {
 		panic(err)
 	}
@@ -36,8 +35,11 @@ func unmarshalConfig(path string) (configuration ConfigMap) {
 
 func readConfiguration(path string) (configFile []byte) {
 	absConfig, err := filepath.Abs(path)
-	configFile, err = ioutil.ReadFile(absConfig)
+	if err != nil {
+		panic(err)
+	}
 
+	configFile, err = ioutil.ReadFile(absConfig)
 	if err != nil {
 		panic(err)
 	}

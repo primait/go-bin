@@ -1,9 +1,0 @@
-machine:
-  timezone:
-    Europe/Rome
-  golang:
-     version: 1.4.2
-
-test:
-  override:
-    - make
