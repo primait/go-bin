@@ -4,14 +4,14 @@ import (
 	"io/ioutil"
 	"path/filepath"
 
-	"gopkg.in/yaml.v2"
+	yaml "gopkg.in/yaml.v2"
 )
 
-type configMap struct {
+type ConfigMap struct {
 	Parameters map[string]string
 }
 
-func GetConfiguration(config string) (configuration configMap, err error) {
+func GetConfiguration(config string) (configuration ConfigMap, err error) {
 	defer func() {
 		err, _ = recover().(error)
 	}()
@@ -23,7 +23,7 @@ func GetConfiguration(config string) (configuration configMap, err error) {
 	return
 }
 
-func unmarshalConfig(path string) (configuration configMap) {
+func unmarshalConfig(path string) (configuration ConfigMap) {
 	configFile := readConfiguration(path)
 	err := yaml.Unmarshal(configFile, &configuration)
 

@@ -4,7 +4,7 @@ gobin:
         - redis
         - rabbit
     ports:
-        - "9001:9001"
+        - "9901:9001"
     volumes:
         - .:/code
 
@@ -21,4 +21,4 @@ rabbit:
     volumes_from:
         - rabbitdata
     ports:
-        - "15672:15672"
+        - "15673:15672"

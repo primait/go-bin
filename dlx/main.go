@@ -105,28 +105,43 @@ func main() {
 	forever := make(chan bool)
 
 	go func() {
-		redisConnection, err := redis.Dial("tcp", configuration.Parameters["redis_ip_address"])
-		panicOnError(err)
-		defer redisConnection.Close()
-
 		for d := range msgs {
-			body := string(d.Body[:])
-			redisConnection.Send(
-				"RPUSH",
-				fmt.Sprintf("prima:dlx:%s", d.RoutingKey),
-				body,
-			)
-			redisConnection.Flush()
-			_, err = redisConnection.Receive()
-			if err != nil {
-				log.Println("Something went wrong setting data in Redis..fuck..")
-			}
-			log.Info(fmt.Sprintf("Received dead message: RoutingKey: %s, Body:%s", d.RoutingKey, body))
+			go func() {
+				defer func() {
+					if err, ok := recover().(error); ok {
+						// http://godoc.org/github.com/streadway/amqp#Delivery.Nack
+						d.Nack(false, true)
+						log.Panic(err)
+					}
+				}()
+				pushToRedis(d, configuration)
+			}()
 		}
 	}()
 
 	log.Println("Listening for dead messages...")
 	<-forever
+}
+
+func pushToRedis(d amqp.Delivery, configuration config.ConfigMap) {
+	redisConnection, err := redis.Dial("tcp", configuration.Parameters["redis_ip_address"])
+	if err != nil {
+		panic(err)
+	}
+	defer redisConnection.Close()
+
+	body := string(d.Body[:])
+	redisConnection.Send(
+		"RPUSH",
+		fmt.Sprintf("prima:dlx:%s", d.RoutingKey),
+		body,
+	)
+	redisConnection.Flush()
+	_, err = redisConnection.Receive()
+	if err != nil {
+		panic(err)
+	}
+	log.Info(fmt.Sprintf("Received dead message: RoutingKey: %s, Body:%s", d.RoutingKey, body))
 }
 
 func panicOnError(err error) {
