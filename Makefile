@@ -1,6 +1,5 @@
 include Makefile.inc
 
-.PHONY: subdirs $(DIRS)
-
-$(DIRS):
-	make -C $@
+all:
+	make -C dlx
+	make -C rabbitmq_consumer

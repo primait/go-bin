@@ -90,7 +90,7 @@ func main() {
 	panicOnError(err)
 	defer ch.Close()
 
-	err = ch.ExchangeDeclare(
+	if err := ch.ExchangeDeclare(
 		"dlx_messages",
 		"topic",
 		true,
@@ -98,8 +98,10 @@ func main() {
 		false,
 		false,
 		nil,
-	)
-	panicOnError(err)
+	); err != nil {
+		// FIXME: ovvio che e' diverso da nil qui dentro
+		panicOnError(err)
+	}
 
 	q, err := ch.QueueDeclare(
 		"dlx_messages",

@@ -24,7 +24,7 @@ func GetConfiguration(config string) (configuration ConfigMap, err error) {
 }
 
 func unmarshalConfig(path string) (configuration ConfigMap) {
-	configFile := readConfiguration(path)
+	configFile := ReadConfiguration(path)
 	err := yaml.Unmarshal(configFile, &configuration)
 	if err != nil {
 		panic(err)
@@ -33,7 +33,7 @@ func unmarshalConfig(path string) (configuration ConfigMap) {
 	return
 }
 
-func readConfiguration(path string) (configFile []byte) {
+func ReadConfiguration(path string) (configFile []byte) {
 	var err error
 	var absConfig string
 

@@ -17,8 +17,8 @@ rabbitdata:
         - /data/mnesia
 
 rabbit:
-    image: dockerfile/rabbitmq
+    image: rabbitmq:3-management
     volumes_from:
         - rabbitdata
     ports:
-        - "15673:15672"
+        - "15672:15672"
