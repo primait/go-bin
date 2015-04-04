@@ -57,6 +57,24 @@ func main() {
 	panicOnError(err)
 	defer rabbitConnection.Close()
 
+	blockings := rabbitConnection.NotifyBlocked(make(chan amqp.Blocking))
+	go func() {
+		for b := range blockings {
+			if b.Active {
+				log.Printf("TCP blocked: %q", b.Reason)
+			} else {
+				log.Printf("TCP unblocked")
+			}
+		}
+	}()
+
+	errorsConn := rabbitConnection.NotifyClose(make(chan *amqp.Error))
+	go func() {
+		for e := range errorsConn {
+			log.Error(e)
+		}
+	}()
+
 	ch, err := rabbitConnection.Channel()
 	panicOnError(err)
 	defer ch.Close()
