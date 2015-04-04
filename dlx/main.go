@@ -48,7 +48,7 @@ func main() {
 			log.AddHook(&slackrus.SlackrusHook{
 				AcceptedLevels: slackrus.LevelThreshold(log.InfoLevel),
 				HookURL:        *flSlackUrl,
-				IconEmoji:      ":dragon_face:",
+				IconEmoji:      ":skull:",
 				Channel:        "#dev",
 				Username:       "dlx",
 			})
