@@ -13,8 +13,9 @@ import (
 )
 
 var (
-	flConfig = flag.String("c", "", "Config file path")
-	flDev    = flag.Bool("d", false, "Dev enviroment")
+	flConfig   = flag.String("c", "", "Config file path")
+	flDev      = flag.Bool("d", false, "Dev enviroment")
+	flSlackUrl = flag.String("s", "", "Slack notification url")
 )
 
 func init() {
@@ -40,15 +41,18 @@ func main() {
 	log.SetOutput(os.Stderr)
 	log.SetLevel(log.InfoLevel)
 
-	if *flDev == false {
+	if !*flDev {
 		log.SetFormatter(&log.JSONFormatter{})
-		log.AddHook(&slackrus.SlackrusHook{
-			AcceptedLevels: slackrus.LevelThreshold(log.InfoLevel),
-			HookURL:        "https://hooks.slack.com/services/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",
-			IconEmoji:      ":dragon_face:",
-			Channel:        "#dev",
-			Username:       "dlx",
-		})
+		// FIXME: validate slack url!
+		if *flSlackUrl != "" {
+			log.AddHook(&slackrus.SlackrusHook{
+				AcceptedLevels: slackrus.LevelThreshold(log.InfoLevel),
+				HookURL:        *flSlackUrl,
+				IconEmoji:      ":dragon_face:",
+				Channel:        "#dev",
+				Username:       "dlx",
+			})
+		}
 	}
 
 	log.Info("Starting dlx")
