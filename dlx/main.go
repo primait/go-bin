@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"time"
 
 	log "github.com/Sirupsen/logrus"
 	"github.com/garyburd/redigo/redis"
@@ -57,10 +58,15 @@ func main() {
 
 	log.Info("Starting dlx")
 
-	rabbitConnection, err := amqp.Dial(configuration.Parameters["rabbitmq_url"])
+	rabbitmqConnectionConfig := amqp.Config{Heartbeat: 60 * time.Second}
+	rabbitConnection, err := amqp.DialConfig(
+		configuration.Parameters["rabbitmq_url"],
+		rabbitmqConnectionConfig,
+	)
 	panicOnError(err)
 	defer rabbitConnection.Close()
 
+	// just a check
 	blockings := rabbitConnection.NotifyBlocked(make(chan amqp.Blocking))
 	go func() {
 		for b := range blockings {
@@ -72,6 +78,7 @@ func main() {
 		}
 	}()
 
+	// just a check
 	errorsConn := rabbitConnection.NotifyClose(make(chan *amqp.Error))
 	go func() {
 		for e := range errorsConn {
