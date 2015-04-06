@@ -9,14 +9,14 @@ import (
 	"time"
 
 	"github.com/Sirupsen/logrus"
-	flag "github.com/docker/docker/pkg/mflag"
+	"github.com/ogier/pflag"
 	"github.com/streadway/amqp"
 	"gopkg.in/yaml.v2"
 )
 
 var (
-	flConfig = flag.String([]string{"c", "-config"}, "", "Configuration file path")
-	flWorker = flag.String([]string{"w", "-worker"}, "", "Worker name to start")
+	flConfig = pflag.StringP("config", "c", "", "Configuration file path")
+	flWorker = pflag.StringP("worker", "w", "", "Worker name to start")
 )
 
 type Producer struct {
@@ -68,7 +68,7 @@ func (c *Conf) Parse(data []byte) error {
 }
 
 func main() {
-	flag.Parse()
+	pflag.Parse()
 
 	if *flConfig == "" {
 		logrus.Fatalf("please provide a valid configuration file")

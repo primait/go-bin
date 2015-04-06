@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"os"
 	"time"
@@ -9,29 +8,30 @@ import (
 	log "github.com/Sirupsen/logrus"
 	"github.com/garyburd/redigo/redis"
 	"github.com/johntdyer/slackrus"
+	"github.com/ogier/pflag"
 	"github.com/primait/go-bin/pkg/config"
 	"github.com/streadway/amqp"
 )
 
 var (
-	flConfig   = flag.String("c", "", "Config file path")
-	flDev      = flag.Bool("d", false, "Dev enviroment")
-	flSlackUrl = flag.String("s", "", "Slack notification url")
+	flConfig   = pflag.StringP("config", "c", "", "Config file path")
+	flDev      = pflag.BoolP("dev", "d", false, "Dev enviroment")
+	flSlackUrl = pflag.StringP("slack-url", "s", "", "Slack notification url")
 )
 
 func init() {
-	flag.Usage = func() {
+	pflag.Usage = func() {
 		fmt.Fprint(os.Stdout, "Usage: dlx OPTIONS [arg...]\n\nOptions:\n")
-		flag.CommandLine.SetOutput(os.Stdout)
-		flag.PrintDefaults()
+		pflag.CommandLine.SetOutput(os.Stdout)
+		pflag.PrintDefaults()
 		fmt.Fprint(os.Stdout, "\n")
 	}
-	flag.Parse()
+	pflag.Parse()
 }
 
 func main() {
 	if *flConfig == "" {
-		flag.Usage()
+		pflag.Usage()
 		log.Fatal("Please provide a configuration file")
 		os.Exit(1)
 	}
