@@ -190,9 +190,13 @@ func main() {
 	go func() {
 		for d := range msgs {
 			log.Printf("Received a message: %s", d.Body)
+			//go func(body []byte) {
+			// usa un goroutine cosi non blocca qui sopra e continua
+			// a ricevere e fare l'handle dei msgs
 			// far partire quelle merde di comandi php qui e
 			// attendere l'exit status, o leggere lo stderr/out
 			/// e return a rabbit ack/nack/reject etc etc
+			//}(d.Body)
 		}
 	}()
 
