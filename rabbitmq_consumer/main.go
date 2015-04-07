@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"sync"
 	"time"
 
 	"github.com/Sirupsen/logrus"
@@ -28,7 +29,8 @@ type Consumer struct {
 	Connection      string       `yaml:"connection"`
 	ExchangeOptions ExchangeOpts `yaml:"exchange_options"`
 	QueueOptions    QueueOpts    `yaml:"queue_options"`
-	Callback        string       `yaml:"callback"`
+	// service to launch inside php command with the json body
+	Callback string `yaml:"callback"`
 }
 
 type ExchangeOpts struct {
@@ -187,10 +189,17 @@ func main() {
 
 	forever := make(chan struct{})
 
+	var wg sync.WaitGroup
+	defer wg.Wait()
+
+	wg.Add(1)
 	go func() {
+		defer wg.Done()
 		for d := range msgs {
 			log.Printf("Received a message: %s", d.Body)
+			//wg.Add(1)
 			//go func(body []byte) {
+			//defer wg.Done()
 			// usa un goroutine cosi non blocca qui sopra e continua
 			// a ricevere e fare l'handle dei msgs
 			// far partire quelle merde di comandi php qui e
