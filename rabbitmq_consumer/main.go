@@ -1,7 +1,6 @@
 package main
 
 import (
-	"errors"
 	"io/ioutil"
 	"log"
 	"os"
@@ -12,62 +11,12 @@ import (
 	"github.com/Sirupsen/logrus"
 	"github.com/ogier/pflag"
 	"github.com/streadway/amqp"
-	"gopkg.in/yaml.v2"
 )
 
 var (
 	flConfig = pflag.StringP("config", "c", "", "Configuration file path")
 	flWorker = pflag.StringP("worker", "w", "", "Worker name to start")
 )
-
-type Producer struct {
-	Connection      string       `yaml:"connection"`
-	ExchangeOptions ExchangeOpts `yaml:"exchange_options"`
-}
-
-type Consumer struct {
-	Connection      string       `yaml:"connection"`
-	ExchangeOptions ExchangeOpts `yaml:"exchange_options"`
-	QueueOptions    QueueOpts    `yaml:"queue_options"`
-	// service to launch inside php command with the json body
-	Callback string `yaml:"callback"`
-}
-
-type ExchangeOpts struct {
-	Name string `yaml:"name"`
-	Type string `yaml:"type"`
-}
-
-type QueueOpts struct {
-	Name        string              `yaml:"name"`
-	RoutingKeys []string            `yaml:"routing_keys"`
-	Args        map[string][]string `yaml:"arguments"`
-}
-
-type RabbitMQConfiguration struct {
-	Url       string              `yaml:"rabbitmq_url"`
-	Producers map[string]Producer `yaml:"producers"`
-	Consumers map[string]Consumer `yaml:"consumers"`
-}
-
-// helper struct because rabbitmq root in the yaml file sucks..
-type Conf struct {
-	Configuration RabbitMQConfiguration `yaml:"rabbitmq"`
-}
-
-func (c *Conf) Parse(data []byte) error {
-	if err := yaml.Unmarshal(data, c); err != nil {
-		return err
-	}
-
-	// config real validation here, just an example..
-	// could set a default if empty for example.. etc etc
-	if c.Configuration.Url == "" {
-		return errors.New("rabbitmq_url cannot be empty!")
-	}
-
-	return nil
-}
 
 func main() {
 	pflag.Parse()
@@ -105,9 +54,6 @@ func main() {
 		logrus.Fatalf("worker %s not configured in config", *flWorker)
 		os.Exit(1)
 	}
-
-	//logrus.Printf("%v\n", c)
-	//logrus.Printf("%v\n", workerConf)
 
 	// apro la connessione a rabbit
 	conn, err := amqp.DialConfig(
