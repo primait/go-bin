@@ -4,4 +4,4 @@ GOINSTALL=$(GOCMD) install
 GOTEST=$(GOCMD) test -a
 GOBUILD=$(GOCMD) build -a
 
-DIRS=dlx rabbitmqconsumer
+DIRS=dlx
